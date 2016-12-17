@@ -8,9 +8,22 @@
 
 import UIKit
 
+@IBDesignable
 class FaceView: UIView {
 
-    var scale = CGFloat(0.9)
+    @IBInspectable
+    var scale:CGFloat = 0.9 {didSet { self.setNeedsDisplay() }}
+    @IBInspectable
+    var eyesOpen:Bool = true {didSet { self.setNeedsDisplay() }}
+    @IBInspectable
+    var eyeBrowTilt:Double = -0.5 {didSet { self.setNeedsDisplay() }}
+    @IBInspectable
+    var color:UIColor = UIColor.orange {didSet { self.setNeedsDisplay() }}
+    @IBInspectable
+    var lineWidth:CGFloat = 7.0 {didSet { self.setNeedsDisplay() }}
+    @IBInspectable
+    var mouthCurvature:Double = -0.70 {didSet { self.setNeedsDisplay() }}
+    
     private var skullRadius:CGFloat {
         return min(bounds.size.width,bounds.size.height) / 2 * scale
     }
@@ -20,6 +33,7 @@ class FaceView: UIView {
     
     private struct Ratios {
         static let SkullRadiusToEyeOffset: CGFloat = 3
+        static let SkullRadiusToBrowOffset: CGFloat = 5
         static let SkullRadiusToEyeRadius: CGFloat = 10
         static let SkullRadiusToMouthWidth: CGFloat = 1
         static let SkullRadiusToMouthHeight: CGFloat = 3
@@ -39,7 +53,28 @@ class FaceView: UIView {
                                 startAngle: 0.0,
                                 endAngle: CGFloat(2*M_PI),
                                 clockwise: false)
-        path.lineWidth = 5.0
+        path.lineWidth = lineWidth
+        return path
+    }
+    
+    private func pathForBrow(eye:Eye) -> UIBezierPath {
+        var tilt = eyeBrowTilt
+        switch eye {
+        case .Left:
+            tilt *= -1.0
+        case .Right:
+            break
+        }
+        var browCenter = getEyeCenter(eye: eye)
+        browCenter.y -= skullRadius / Ratios.SkullRadiusToBrowOffset
+        let eyeRadius = skullRadius / Ratios.SkullRadiusToEyeRadius
+        let tiltOffset = CGFloat(max(-1,min(tilt,1))) * eyeRadius / 2
+        let browStart = CGPoint(x: browCenter.x - eyeRadius, y: browCenter.y - tiltOffset)
+        let browEnd = CGPoint(x: browCenter.x + eyeRadius, y: browCenter.y + tiltOffset)
+        let path = UIBezierPath()
+        path.move(to: browStart)
+        path.addLine(to: browEnd)
+        path.lineWidth = lineWidth
         return path
     }
     
@@ -47,7 +82,16 @@ class FaceView: UIView {
     {
         let eyeRadius = skullRadius / Ratios.SkullRadiusToEyeRadius
         let eyeCenter = getEyeCenter(eye: eye)
-        return pathForCircleCentered(at: eyeCenter, with: eyeRadius)
+        if eyesOpen {
+            return pathForCircleCentered(at: eyeCenter, with: eyeRadius)
+        }
+        else {
+            let path = UIBezierPath()
+            path.move(to: CGPoint(x: eyeCenter.x - eyeRadius, y: eyeCenter.y))
+            path.addLine(to: CGPoint(x: eyeCenter.x + eyeRadius, y: eyeCenter.y))
+            path.lineWidth = lineWidth
+            return path
+        }
     }
     
     private func pathFor(mouth:Double) -> UIBezierPath {
@@ -68,7 +112,7 @@ class FaceView: UIView {
         let path = UIBezierPath()
         path.move(to: start)
         path.addCurve(to: end, controlPoint1: cp1, controlPoint2: cp2)
-        path.lineWidth = 5.0
+        path.lineWidth = lineWidth
         return path
     }
     
@@ -86,11 +130,13 @@ class FaceView: UIView {
     }
     
     override func draw(_ rect: CGRect) {
-        UIColor.blue.set()
+        color.set()
         pathForCircleCentered(at: skullCenter, with: skullRadius).stroke()
         pathFor(eye: .Left).stroke()
         pathFor(eye: .Right).stroke()
-        pathFor(mouth: 1.0).stroke()
+        pathFor(mouth: mouthCurvature).stroke()
+        pathForBrow(eye: .Right).stroke()
+        pathForBrow(eye: .Left).stroke()
     }
     
 }

@@ -16,6 +16,20 @@ class FaceViewController: UIViewController {
         }
     }
     
+
+    @IBAction func toggleEyes(_ recognizer: UITapGestureRecognizer) {
+        if recognizer.state == .ended{
+            switch expression.eyes {
+            case .open:
+                expression.eyes = .closed
+            case .closed:
+                expression.eyes = .open
+            case .squinting:
+                break
+            }
+        }
+    }
+    
     @IBOutlet weak var faceView: FaceView! {
         didSet {
             faceView.addGestureRecognizer(UIPinchGestureRecognizer(target: faceView,

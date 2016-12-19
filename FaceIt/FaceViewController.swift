@@ -9,14 +9,14 @@
 import UIKit
 
 class FaceViewController: UIViewController {
-
+//MARK: Model
     var expression = FacialExpression(eyes: .closed, eyeBrows: .relaxed, mouth: .smirk) {
         didSet {
             updateUI()
         }
     }
     
-
+//MARK: View
     @IBAction func toggleEyes(_ recognizer: UITapGestureRecognizer) {
         if recognizer.state == .ended{
             switch expression.eyes {
@@ -58,13 +58,14 @@ class FaceViewController: UIViewController {
     private let eyeBrowTilt = [FacialExpression.EyeBrows.relaxed:0.5,.furrowed:-0.5,.normal:0.0]
     
     private func updateUI() {
+        
         switch expression.eyes {
-        case .open: faceView.eyesOpen = true
-        case .closed: faceView.eyesOpen = false
-        case .squinting: faceView.eyesOpen = false
+        case .open: faceView?.eyesOpen = true
+        case .closed: faceView?.eyesOpen = false
+        case .squinting: faceView?.eyesOpen = false
         }
-        faceView.mouthCurvature = mouthCurvature[expression.mouth] ?? 0.0
-        faceView.eyeBrowTilt = eyeBrowTilt[expression.eyeBrows] ?? 0.0
+        faceView?.mouthCurvature = mouthCurvature[expression.mouth] ?? 0.0
+        faceView?.eyeBrowTilt = eyeBrowTilt[expression.eyeBrows] ?? 0.0
         
     }
     

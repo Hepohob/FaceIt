@@ -9,11 +9,17 @@
 import UIKit
 
 class FaceViewController: UIViewController {
+    
 //MARK: Model
     var expression = FacialExpression(eyes: .closed, eyeBrows: .relaxed, mouth: .smirk) {
         didSet {
             updateUI()
         }
+    }
+    
+    private struct Animation {
+        static let ShakeAngle = CGFloat(M_PI/6)
+        static let ShakeDuration = 0.3
     }
     
 //MARK: View
@@ -29,6 +35,42 @@ class FaceViewController: UIViewController {
             }
         }
     }
+    
+    @IBAction func headShake(_ sender: UITapGestureRecognizer)
+    {
+        UIView.animate(
+            withDuration: Animation.ShakeDuration,
+            animations: {
+                self.faceView.transform = self.faceView.transform.rotated(by: Animation.ShakeAngle)
+        },
+            completion: { finished in
+                if finished {
+                    UIView.animate(
+                        withDuration: Animation.ShakeDuration * 2,
+                        animations: {
+                            self.faceView.transform = self.faceView.transform.rotated(by: -Animation.ShakeAngle * 2)
+                    },
+                        completion: { finished in
+                            if finished {
+                                UIView.animate(
+                                    withDuration: Animation.ShakeDuration,
+                                    animations: {
+                                        self.faceView.transform = self.faceView.transform.rotated(by: Animation.ShakeAngle)
+                                },
+                                    completion: { finished in
+                                        if finished {
+                                            
+                                        }
+                                }
+                                )
+                            }
+                    }
+                    )
+                }
+        }
+        )
+    }
+
     
     @IBOutlet weak var faceView: FaceView! {
         didSet {

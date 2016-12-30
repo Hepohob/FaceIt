@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4719F59C1E167BDB00BBC209 /* BinkingFaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4719F59B1E167BDB00BBC209 /* BinkingFaceViewController.swift */; };
+		4719F5A11E168CAB00BBC209 /* EyeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4719F5A01E168CAB00BBC209 /* EyeView.swift */; };
 		476D711B1E05D55F000666F9 /* FacialExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476D711A1E05D55F000666F9 /* FacialExpression.swift */; };
 		652957031E042A0800796063 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652957021E042A0800796063 /* AppDelegate.swift */; };
 		652957051E042A0800796063 /* FaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652957041E042A0800796063 /* FaceViewController.swift */; };
@@ -20,6 +21,7 @@
 
 /* Begin PBXFileReference section */
 		4719F59B1E167BDB00BBC209 /* BinkingFaceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinkingFaceViewController.swift; sourceTree = "<group>"; };
+		4719F5A01E168CAB00BBC209 /* EyeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EyeView.swift; sourceTree = "<group>"; };
 		476D711A1E05D55F000666F9 /* FacialExpression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FacialExpression.swift; sourceTree = "<group>"; };
 		652956FF1E042A0800796063 /* FaceIt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FaceIt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		652957021E042A0800796063 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 			children = (
 				652957061E042A0800796063 /* Main.storyboard */,
 				652957151E042AED00796063 /* FaceView.swift */,
+				4719F5A01E168CAB00BBC209 /* EyeView.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -181,6 +184,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4719F5A11E168CAB00BBC209 /* EyeView.swift in Sources */,
 				4719F59C1E167BDB00BBC209 /* BinkingFaceViewController.swift in Sources */,
 				652957051E042A0800796063 /* FaceViewController.swift in Sources */,
 				476D711B1E05D55F000666F9 /* FacialExpression.swift in Sources */,

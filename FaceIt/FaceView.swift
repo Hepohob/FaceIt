@@ -11,16 +11,29 @@ import UIKit
 @IBDesignable
 class FaceView: UIView {
 
+    //MARK: Public API
+    
     @IBInspectable
     var scale:CGFloat = 0.9 {didSet { self.setNeedsDisplay() }}
     @IBInspectable
-    var eyesOpen:Bool = true {didSet { self.setNeedsDisplay() }}
+    var eyesOpen:Bool = true {didSet{
+        leftEye.eyesOpen = eyesOpen
+        rightEye.eyesOpen = eyesOpen
+        }}
     @IBInspectable
     var eyeBrowTilt:Double = -0.5 {didSet { self.setNeedsDisplay() }}
     @IBInspectable
-    var color:UIColor = UIColor.orange {didSet { self.setNeedsDisplay() }}
+    var color:UIColor = UIColor.orange {didSet{
+        self.setNeedsDisplay()
+        leftEye.color = color
+        rightEye.color = color
+        }}
     @IBInspectable
-    var lineWidth:CGFloat = 7.0 {didSet { self.setNeedsDisplay() }}
+    var lineWidth:CGFloat = 7.0 {didSet {
+        self.setNeedsDisplay()
+        leftEye.lineWidth = lineWidth
+        rightEye.lineWidth = lineWidth
+        }}
     @IBInspectable
     var mouthCurvature:Double = -0.70 {didSet { self.setNeedsDisplay() }}
     
@@ -89,6 +102,7 @@ class FaceView: UIView {
         return path
     }
     
+/*
     private func pathFor(eye:Eye) -> UIBezierPath
     {
         let eyeRadius = skullRadius / Ratios.SkullRadiusToEyeRadius
@@ -104,6 +118,7 @@ class FaceView: UIView {
             return path
         }
     }
+*/
     
     private func pathFor(mouth:Double) -> UIBezierPath {
         let mouthWidth = skullRadius / Ratios.SkullRadiusToMouthWidth
@@ -140,11 +155,35 @@ class FaceView: UIView {
         return eyeCenter
     }
     
+    private lazy var leftEye: EyeView = self.createEye()
+    private lazy var rightEye: EyeView = self.createEye()
+    
+    private func createEye() -> EyeView {
+        let eye = EyeView()
+        eye.isOpaque = false
+        eye.color = color
+        eye.lineWidth = lineWidth
+        self.addSubview(eye)
+        return eye
+    }
+    
+    private func positionEye(_ eye: EyeView, center: CGPoint) {
+        let size = skullRadius / Ratios.SkullRadiusToEyeRadius * 2
+        eye.frame = CGRect(origin: CGPoint.zero, size: CGSize(width: size, height: size))
+        eye.center = center
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        positionEye(leftEye, center: getEyeCenter(eye: .Left))
+        positionEye(rightEye, center: getEyeCenter(eye: .Right))
+    }
+    
     override func draw(_ rect: CGRect) {
         color.set()
         pathForCircleCentered(at: skullCenter, with: skullRadius).stroke()
-        pathFor(eye: .Left).stroke()
-        pathFor(eye: .Right).stroke()
+//        pathFor(eye: .Left).stroke()
+//        pathFor(eye: .Right).stroke()
         pathFor(mouth: mouthCurvature).stroke()
         pathForBrow(eye: .Right).stroke()
         pathForBrow(eye: .Left).stroke()
